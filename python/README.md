@@ -30,7 +30,7 @@
  
 ## Use-cases
 
-### Transcribe file
+### 🟢 Transcribe file
 ```bash
 python transcribe-file.py
 ```
@@ -40,7 +40,7 @@ Optionally, you can specify the file path:
 python transcribe-file.py <file/path>
 ```
 
-### Transcribe link
+### 🟢 Transcribe link
 ```bash
 python transcribe-link.py
 ```
@@ -50,7 +50,7 @@ Optionally, you can specify the link:
 python transcribe-link.py <https://your/link>
 ```
 
-### Transcribe file real-time
+### 🟢 Transcribe file real-time
 ```bash
 python transcribe-file-real-time.py
 ```
@@ -60,7 +60,7 @@ Optionally, you can specify the file path:
 python transcribe-file-real-time.py <file/path>
 ```
 
-### Transcribe microphone feed
+### 🟢 Transcribe microphone feed
 
 Install the `pyaudio` library:
 ```bash

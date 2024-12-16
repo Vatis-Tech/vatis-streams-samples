@@ -1,3 +1,4 @@
+import json
 import uuid
 from time import sleep
 
@@ -76,7 +77,7 @@ def transcribe(file_link: str, api_key: str, stream_configuration_template_id: s
     export_result = export_response.json()
 
     if export_response.ok:
-        print(export_result)
+        print(json.dumps(export_result, indent=2))
     else:
         print(f'Error on export: {export_result}')
 
