@@ -3,3 +3,6 @@ requests
 # real-time
 rel
 websocket-client
+
+# audio intelligence
+pydantic

@@ -71,3 +71,20 @@ Then run the script:
 ```bash
 python transcribe-microphone-feed.py
 ```
+
+### 🟢 Audio intelligence
+
+Install the `pydantic` library:
+```bash
+pip install pydantic
+```
+
+Then run the script:
+```bash
+python audio-intelligence.py
+```
+
+Optionally, you can specify the file path:
+```bash
+python audio-intelligence.py <file/path>
+```
