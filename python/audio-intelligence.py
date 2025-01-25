@@ -53,6 +53,7 @@ def transcribe(stream_generator: Generator[bytes, None, None], api_key: str, str
         'language': 'en',  # set the language here
         'configurationMessage': 'true',  # indicate a configuration message will be sent
         'egress': 'false',  # do not send responses on the websocket, the final result will be exported at the end
+        'persist': 'true',  # keep the result for a short amount of time, so we can export it
     }
 
     # authentication headers
