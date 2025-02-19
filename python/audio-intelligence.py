@@ -5,13 +5,11 @@ import threading
 import uuid
 from pathlib import Path
 from time import sleep
-from typing import Generator, List
+from typing import List
 
 import requests
-import websocket
 
 # configuration #####
-BASE_URL: str = 'wss://ws-gateway.vatis.tech'
 DISPLAY_PARTIAL_FRAMES: bool = False
 # configuration end #####
 
@@ -41,43 +39,37 @@ def _ask_anything_configuration() -> str:
     return json.dumps(message)
 
 
-def transcribe(stream_generator: Generator[bytes, None, None], api_key: str, stream_configuration_template_id: str):
+def transcribe(file_path: Path, api_key: str, stream_configuration_template_id: str):
     assert api_key, 'API_KEY is required'
 
     stream_id: str = str(uuid.uuid4())
 
-    # configuration options here
-    parameters = {
-        'id': stream_id,
+    # Upload the file
+    upload_url: str = 'https://http-gateway.vatis.tech/http-gateway/api/v1/upload'
+
+    query_parameters: dict = {
         'streamConfigurationTemplateId': stream_configuration_template_id,
-        'language': 'en',  # set the language here
-        'configurationMessage': 'true',  # indicate a configuration message will be sent
-        'egress': 'false',  # do not send responses on the websocket, the final result will be exported at the end
-        'persist': 'true',  # keep the result for a short amount of time, so we can export it
+        'id': stream_id,
+        'persist': 'true'
     }
 
-    # authentication headers
-    headers = {
-        'Authorization': f'Basic {api_key}',
+    upload_headers: dict = {
+        'Accept': 'application/json',
+        'Authorization': f'Basic {api_key}'
     }
 
-    # define the upload connection
-    connection: websocket.WebSocket = websocket.create_connection(
-        f'{BASE_URL}/ws-gateway/api/v1/?{"&".join([f"{k}={v}" for k, v in parameters.items()])}',
-        header=headers,
-        enable_multithread=False,
-    )
+    with open(file_path, 'rb') as payload:
+        # (part_name, (filename, fileobj, content_type))
+        multipart = (
+            ('config', (None, _ask_anything_configuration(), 'application/json')),
+            ('file', (None, payload, 'application/octet-stream'))
+        )
 
-    connection.send_text(_ask_anything_configuration())
+        upload_response = requests.post(upload_url, headers=upload_headers, params=query_parameters, files=multipart)
 
-    for data in stream_generator:
-        connection.send_bytes(data)
-
-    upload_response: dict = json.loads(connection.recv())
-    connection.close()
-
-    if upload_response['type'] == 'ERROR':
-        raise RuntimeError(f'upload error: {upload_response}')
+    if not upload_response.ok:
+        print(f'Error on file upload: {upload_response.status_code} - {upload_response.json()}')
+        return
 
     print(f'File uploaded successfully: {stream_id}')
 
@@ -124,15 +116,6 @@ def transcribe(stream_generator: Generator[bytes, None, None], api_key: str, str
         print(f'Error on export: {export_result}')
 
 
-def stream_file(file_path: Path, chunk_size: int = 10*1024) -> Generator[bytes, None, None]:
-    with open(file_path, 'rb') as file:
-        while True:
-            chunk = file.read(chunk_size)
-            if not chunk:
-                break
-            yield chunk
-
-
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         file_path = sys.argv[1]
@@ -146,6 +129,6 @@ if __name__ == '__main__':
     api_key: str = os.environ.get('API_KEY')
     stream_configuration_template_id: str = os.environ.get('CONFIGURATION_ID', '668115d123bca7e3509723d4')
 
-    transcribe(stream_generator=stream_file(file_path),
+    transcribe(file_path=file_path,
                api_key=api_key,
                stream_configuration_template_id=stream_configuration_template_id)
