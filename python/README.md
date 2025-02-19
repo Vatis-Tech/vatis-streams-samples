@@ -88,3 +88,23 @@ Optionally, you can specify the file path:
 ```bash
 python audio-intelligence.py <file/path>
 ```
+
+### 🟢 Transcribe file with webhook
+
+In order to test the webhook functionality, we'll need to expose a local port from the local machine to the internet (the script defaults to `8081`).
+
+Unless your local machine is already exposed to the internet, you can use a tool like `pinggy.io` to create a temporary SSH tunnel, and pass the generated domain name to the script:
+
+```bash
+ssh -p 443 -R0:localhost:8081 qr@a.pinggy.io
+```
+
+Run the script
+```bash
+python transcribe-file-webhook.py --webhook-base-url https://<random-string>.pinggy.link
+```
+
+Optionally, you can specify the file path and the port used to listen for the webhook:
+```bash
+python transcribe-file-webhook.py --webhook-base-url https://<random-string>.pinggy.link --file-path <file/path> --port 8081
+```
