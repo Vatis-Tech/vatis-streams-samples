@@ -28,7 +28,6 @@ def _ask_anything_configuration() -> str:
         issues: List[ClientIssue] = Field()
 
     message: dict = {
-        'type': 'CONFIGURATION',
         'patches': {
             'ask0': 'Identify all the issues raised in this conversations and whether it was solved or not.',
             'ask0Id': 'client_issues',
