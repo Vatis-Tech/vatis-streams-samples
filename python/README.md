@@ -108,3 +108,13 @@ Optionally, you can specify the file path and the port used to listen for the we
 ```bash
 python transcribe-file-webhook.py --webhook-base-url https://<random-string>.pinggy.link --file-path <file/path> --port 8081
 ```
+
+### 🟢 Transcribe file enhanced
+```bash
+python transcribe-file-enhanced.py
+```
+
+Optionally, you can specify the file path:
+```bash
+python transcribe-file-enhanced.py <file/path>
+```
