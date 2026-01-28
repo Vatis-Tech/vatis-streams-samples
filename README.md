@@ -21,6 +21,7 @@ your [API key](https://vatis.tech/app/playground/transcribe).
 | **Transcribe microphone feed** | [✅](python/transcribe-microphone-feed.py) |
 | **Audio intelligence**         |     [✅](python/audio-intelligence.py)     |
 | **Webhook**                    |  [✅](python/transcribe-file-webhook.py)   |
+| **Transcription enhancement**  |  [✅](python/transcribe-file-enhanced.py)  |
 
 ## Microphone feed
 
